@@ -1,29 +1,27 @@
-import { FaUserInjured, FaCalendarAlt, FaPills, FaComments } from "react-icons/fa";
+// components/Sidebar.js
+import { FaUserMd, FaNotesMedical, FaCalendarAlt, FaBell, FaChartBar } from 'react-icons/fa';
 
-const Sidebar = () => {
-  return (
-    <div className="w-64 bg-gray-900 text-white flex flex-col py-6 px-4 space-y-6 shadow-lg">
-      <h1 className="text-3xl font-bold text-center text-teal-400">Doctor</h1>
-      <nav className="flex flex-col gap-4">
-        <a href="#" className="flex items-center gap-3 hover:text-teal-300">
-          <FaUserInjured />
-          Patient Overview
-        </a>
-        <a href="#" className="flex items-center gap-3 hover:text-teal-300">
-          <FaCalendarAlt />
-          Appointment Management
-        </a>
-        <a href="#" className="flex items-center gap-3 hover:text-teal-300">
-          <FaPills />
-          Medication History
-        </a>
-        <a href="#" className="flex items-center gap-3 hover:text-teal-300">
-          <FaComments />
-          Communication
-        </a>
-      </nav>
-    </div>
-  );
-};
+const Sidebar = () => (
+  <aside className="w-64 h-screen bg-black text-white flex flex-col p-4">
+    <h1 className="text-2xl font-bold mb-6">Health Connect</h1>
+    <nav className="space-y-4">
+      <a href="#" className="flex items-center space-x-2 hover:text-teal-400">
+        <FaUserMd /> <span>Patient Overview</span>
+      </a>
+      <a href="#" className="flex items-center space-x-2 hover:text-teal-400">
+        <FaNotesMedical /> <span>Health Records</span>
+      </a>
+      <a href="#" className="flex items-center space-x-2 hover:text-teal-400">
+        <FaCalendarAlt /> <span>Appointments</span>
+      </a>
+      <a href="#" className="flex items-center space-x-2 hover:text-teal-400">
+        <FaBell /> <span>Emergency Alerts</span>
+      </a>
+      <a href="#" className="flex items-center space-x-2 hover:text-teal-400">
+        <FaChartBar /> <span>Health Analytics</span>
+      </a>
+    </nav>
+  </aside>
+);
 
 export default Sidebar;

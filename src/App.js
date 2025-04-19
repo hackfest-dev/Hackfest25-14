@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './LoginPage';
 import Dashboard from './Dashboard';
+import PatientReminderForm from "./frontend/components/PatientReminderForm"; 
 import BloodTestResultPage from "./frontend/pages/BloodTestResultPage";  
 import AnnualPhysicalPage from "./frontend/pages/AnnualPhysicalPage";
 import VaccinationRecordPage from "./frontend/pages/VaccinationRecordPage";
@@ -11,6 +12,8 @@ import AwarenessBloodDonationPage from './AwarenessBloodDonationPage'; // ✅ Im
 import HolisticHealthPage from './HolisticHealthPage'; 
 import HealthAIAssistant from './HealthAIAssistant';  
 import DoctorDashboard from "./frontend/pages/DoctorDashboard";
+import OverviewCards from './frontend/components/OverviewCards'; 
+
 
 
 function App() {
@@ -28,7 +31,7 @@ function App() {
         <Route path="/holistic-health" element={<HolisticHealthPage />} />
         <Route path="/health-ai-assistant" element={<HealthAIAssistant />} />
         <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-
+        <Route path="/reminder" element={<PatientReminderForm />} />
       </Routes>
     </Router>
   );

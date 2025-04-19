@@ -38,7 +38,7 @@ const Dashboard = () => {
       subtitle: 'Never miss important health appointments',
       description: 'Set personalized reminders for medications, doctor appointments, and regular health check-ups.',
       buttonText: 'Set Reminders',
-      onClick: () => {} // Add logic later
+      onClick: () => navigate('/reminder') 
     },
     {
       icon: '💧',

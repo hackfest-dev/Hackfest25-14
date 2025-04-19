@@ -1,21 +1,32 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const app = express();
+const cron = require('node-cron'); // for reminder scheduling
 
+const app = express();
 app.use(cors());
 app.use(express.json());
 
+// MongoDB connection
 mongoose.connect('mongodb://127.0.0.1:27017/medisync', {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }).then(() => console.log("MongoDB connected"))
     .catch((err) => console.log("MongoDB Error:", err));
 
-// Import models
+// ---------------------------
+// MODELS
+// ---------------------------
 const SharedRecord = require('./models/SharedRecord');
+const Reminder = require('./models/Reminder'); // new model for reminders
 
-// API to share a record
+// ---------------------------
+// ROUTES
+// ---------------------------
+const reminderRoutes = require('./routes/reminderRoutes');
+app.use('/api/reminders', reminderRoutes);
+
+// Share a record
 app.post('/api/share', async(req, res) => {
     const { patientId, doctorId, records } = req.body;
 
@@ -29,7 +40,7 @@ app.post('/api/share', async(req, res) => {
     }
 });
 
-// API to get records shared with a doctor
+// Get records shared with a doctor
 app.get('/api/doctor-records/:doctorId', async(req, res) => {
     const { doctorId } = req.params;
 
@@ -42,4 +53,39 @@ app.get('/api/doctor-records/:doctorId', async(req, res) => {
     }
 });
 
-app.listen(5000, () => console.log("Backend running on port 5000"));
+// Emergency API
+app.post('/emergency', (req, res) => {
+    const { name, type, location } = req.body;
+
+    console.log(`🚨 Emergency Alert: ${type} for ${name} at ${location.latitude}, ${location.longitude}`);
+    // Future: Notify emergency services or nearby ambulances
+
+    res.json({ message: 'Ambulance dispatched to your location.' });
+});
+
+// ---------------------------
+// CRON JOB for Daily Reminders
+// ---------------------------
+cron.schedule('0 9 * * *', async() => {
+    try {
+        const today = new Date().toISOString().split("T")[0];
+        const reminders = await Reminder.find();
+
+        reminders.forEach(rem => {
+            const reminderDate = rem.date?.toISOString().split("T");
+
+
+            if (reminderDate === today) {
+                console.log(`🔔 Reminder for ${rem.name}`);
+                // Future: Send push/email notification
+            }
+        });
+    } catch (err) {
+        console.error("Cron job error:", err);
+    }
+}, {
+    timezone: "Asia/Kolkata" // change based on your local time
+});
+
+// Start server
+app.listen(5000, () => console.log("✅ Backend running on port 5000"));

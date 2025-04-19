@@ -1,17 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import EmergencyModal from './frontend/components/EmergencyModal';
+import LiveMap from './frontend/components/LiveMap';
+
+
 
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const showUserLogin = () => {
-    document.getElementById("user-login").classList.remove("hidden");
-    document.getElementById("user-login").scrollIntoView({ behavior: "smooth" });
-  };
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+  const [showPatientModal, setShowPatientModal] = useState(false);
+  const [showDoctorModal, setShowDoctorModal] = useState(false);
+  const [showAmbulanceModal, setShowAmbulanceModal] = useState(false);
+  const [showBloodBankModal, setShowBloodBankModal] = useState(false);
 
-  const handleLogin = (e) => {
+  const handlePatientLogin = (e) => {
     e.preventDefault();
     navigate("/dashboard");
+  };
+
+  const handleDoctorLogin = (e) => {
+    e.preventDefault();
+    navigate("/doctor-dashboard");
+  };
+
+  const handleAmbulanceLogin = (e) => {
+    e.preventDefault();
+    navigate("/ambulance-dashboard");
+  };
+
+  const handleBloodBankLogin = (e) => {
+    e.preventDefault();
+    navigate("/bloodbank-dashboard");
   };
 
   return (
@@ -34,73 +54,126 @@ export default function LoginPage() {
           <h2 className="text-2xl font-semibold mb-8 text-teal-600">Choose Your Portal</h2>
           <div className="flex flex-wrap justify-center gap-5 mb-8">
             <button
-              onClick={showUserLogin}
+              onClick={() => setShowPatientModal(true)}
               className="bg-teal-500 text-white px-6 py-3 rounded-xl shadow-md hover:bg-teal-600 transition-transform transform hover:scale-105 duration-300"
             >
               Patients
             </button>
             <button
-              onClick={() => navigate("/doctor-dashboard")}
+              onClick={() => setShowDoctorModal(true)}
               className="bg-green-500 text-white px-6 py-3 rounded-xl shadow-md hover:bg-green-600 transition-transform transform hover:scale-105 duration-300"
             >
               Doctors
             </button>
             <button
+              onClick={() => setShowAmbulanceModal(true)}
               className="bg-purple-500 text-white px-6 py-3 rounded-xl shadow-md hover:bg-purple-600 transition-transform transform hover:scale-105 duration-300"
             >
               Ambulance
             </button>
             <button
+              onClick={() => setShowBloodBankModal(true)}
               className="bg-pink-500 text-white px-6 py-3 rounded-xl shadow-md hover:bg-pink-600 transition-transform transform hover:scale-105 duration-300"
             >
               Blood Bank
             </button>
           </div>
-
-          {/* Glassmorphism Login Card */}
-          <div
-            id="user-login"
-            className="hidden mx-auto mt-6 max-w-md bg-white/60 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-teal-200"
-          >
-            <h3 className="text-2xl font-bold mb-6 text-teal-700 text-center">User Login (Aadhaar)</h3>
-            <form className="space-y-5" onSubmit={handleLogin}>
-              <div>
-                <label className="block text-sm font-medium text-gray-800 mb-1">Aadhaar Number</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-400 focus:outline-none"
-                  placeholder="Enter Aadhaar"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-800 mb-1">OTP</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-400 focus:outline-none"
-                  placeholder="Enter OTP"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 transition duration-300"
-              >
-                Login
-              </button>
-            </form>
-          </div>
         </section>
 
         <section className="text-center mt-10">
-          <h3 className="text-2xl font-semibold text-red-600 mb-4">Emergency Request</h3>
-          <button
-            className="bg-red-500 text-white px-6 py-3 rounded-xl hover:bg-red-600 transition-transform transform hover:scale-105 duration-300 shadow-md"
-          >
-            Request Emergency Help
-          </button>
-        </section>
+  <h3 className="text-2xl font-semibold text-red-600 mb-4">Emergency Request</h3>
+  <button
+    className="bg-red-500 text-white px-6 py-3 rounded-xl hover:bg-red-600 transition-transform transform hover:scale-105 duration-300 shadow-md"
+    onClick={() => setShowEmergencyModal(true)} // ✅ Show modal on click
+  >
+    Request Emergency Help
+  </button>
+
+  {/* ✅ Show EmergencyModal + LiveMap if true */}
+  {showEmergencyModal && (
+    <>
+      <EmergencyModal isOpen={showEmergencyModal} onClose={() => setShowEmergencyModal(false)} />
+      <LiveMap />
+    </>
+  )}
+</section>
+
       </main>
+
+      {/* Patient Modal */}
+      {showPatientModal && (
+        <Modal title="Patient Login" onClose={() => setShowPatientModal(false)} onSubmit={handlePatientLogin}>
+          <Input label="Aadhaar Number" type="text" placeholder="Enter Aadhaar" pattern="\d{12}" maxLength={12} />
+          <Input label="OTP" type="text" placeholder="Enter OTP" pattern="\d{4}" maxLength={4} />
+        </Modal>
+      )}
+
+      {/* Doctor Modal */}
+      {showDoctorModal && (
+        <Modal title="Doctor Login" onClose={() => setShowDoctorModal(false)} onSubmit={handleDoctorLogin}>
+          <Input label="Employee ID" type="text" placeholder="Enter Employee ID" />
+          <Input label="Password" type="password" placeholder="Enter Password" />
+        </Modal>
+      )}
+
+      {/* Ambulance Modal */}
+      {showAmbulanceModal && (
+        <Modal title="Ambulance Login" onClose={() => setShowAmbulanceModal(false)} onSubmit={handleAmbulanceLogin}>
+          <Input label="Vehicle ID" type="text" placeholder="Enter Vehicle ID" />
+          <Input label="Password" type="password" placeholder="Enter Password" />
+        </Modal>
+      )}
+
+      {/* Blood Bank Modal */}
+      {showBloodBankModal && (
+        <Modal title="Blood Bank Login" onClose={() => setShowBloodBankModal(false)} onSubmit={handleBloodBankLogin}>
+          <Input label="Center ID" type="text" placeholder="Enter Center ID" />
+          <Input label="Password" type="password" placeholder="Enter Password" />
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// 🔹 Reusable Modal Component
+function Modal({ title, onClose, onSubmit, children }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg w-full max-w-md relative shadow-lg">
+        <button
+          className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-2xl"
+          onClick={onClose}
+        >
+          &times;
+        </button>
+        <h2 className="text-xl font-bold mb-4 text-center">{title}</h2>
+        <form className="space-y-5" onSubmit={onSubmit}>
+          {children}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// 🔹 Reusable Input Component
+function Input({ label, type, placeholder, pattern, maxLength }) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-gray-800 mb-1">{label}</label>
+      <input
+        type={type}
+        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        placeholder={placeholder}
+        pattern={pattern}
+        maxLength={maxLength}
+        required
+      />
     </div>
   );
 }
